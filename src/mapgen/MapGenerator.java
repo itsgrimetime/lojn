@@ -32,7 +32,7 @@ public class MapGenerator {
 		
 		for(int i = 0; i < width; i++)
 			for(int j = 0; j < height; j++)
-				tileChars[i][j] = '1';
+				tileChars[i][j] = '#';
 		
 		for (BinaryTreeNode<Rectangle> room : rooms) {
 			Rectangle dims = room.getElement();
@@ -42,7 +42,7 @@ public class MapGenerator {
 			
 			for(int i = dims.getX() + 1; i < (dims.getX() - 1) + dims.getWidth(); i++) {
 				for (int j = dims.getY() + 1; j < (dims.getY() - 1) + dims.getHeight(); j++) {
-					tileChars[i][j] = '0';
+					tileChars[i][j] = '.';
 				}
 			}
 			
@@ -58,6 +58,7 @@ public class MapGenerator {
 			for (int j = 0; j < height; j++) {
 				pw.write(tileChars[i][j]);
 			}
+			pw.write('\r');
 			pw.write('\n');
 		}
 		

@@ -5,7 +5,9 @@ import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.util.Random;
 
+
 public class CellularAutomataMapGenerator {
+	private int[][] dirs = new int[][]{ {1, 0}, {1, 1}, {0, 1}, {-1, 1}, {-1, 0}, {-1, -1}, {0, -1} };
 
 	public CellularAutomataMapGenerator(int width, int height, int wallIters,
 			int waterIters, double percWall, double percWater, String filename) {
@@ -29,6 +31,9 @@ public class CellularAutomataMapGenerator {
 		for(int i = 0; i < width; i++) {
 			tiles[i][0] = '#';
 			tiles[i][height - 1] = '#';
+		}
+		
+		for (int i = 0; i < height; i++) {
 			tiles[0][i] = '#';
 			tiles[width - 1][i] = '#';
 		}
@@ -43,6 +48,8 @@ public class CellularAutomataMapGenerator {
 			}
 		}
 		
+		System.out.println("width: " + width);
+		System.out.println("height: " + height);
 		// ## Debug - print map before automata are iterated
 		
 		// printMap(tiles);
@@ -55,9 +62,37 @@ public class CellularAutomataMapGenerator {
 		}
 		addWater(percWater, tiles, width, height);
 		// printMap(tiles);
+
 		for (int i = 0; i < waterIters; i++) {
 			spreadWater(4, tiles);
 			// printMap(tiles);
+		}
+		
+		// this hurts me deeply
+		
+		for (int i = 0; i < width; i++) {
+			for (int j = 0; j < height; j++) {
+				if (tiles[i][j] == '~') {
+					for (int[] vec : dirs) {
+						if (tiles[i + vec[0]][j + vec[1]] == '.') {
+//							tiles[i + vec[0]][j + vec[1]] = 'w';
+							tiles[i][j] = 'w';
+						}
+					}
+ 				}
+			}
+		}
+
+		for (int i = 0; i < width; i++) {
+			for (int j = 0; j < height; j++) {
+				if (tiles[i][j] == 'w') {
+					for (int[] vec : dirs) {
+						if (tiles[i + vec[0]][j + vec[1]] == '.') {
+							tiles[i + vec[0]][j + vec[1]] = 'm';
+						}
+					}
+ 				}
+			}
 		}
 		
 		// print dimensions to map file

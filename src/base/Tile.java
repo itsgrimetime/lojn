@@ -1,10 +1,8 @@
 package base;
 
-
-import items.Item;
-
 import java.util.ArrayList;
 
+import items.Item;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;

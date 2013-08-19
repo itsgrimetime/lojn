@@ -1,7 +1,5 @@
 package base;
 
-import mapgen.CellularAutomataMapGenerator;
-
 import org.newdawn.slick.AppGameContainer;
 import org.newdawn.slick.BasicGame;
 import org.newdawn.slick.Color;
@@ -69,7 +67,7 @@ public class LegendOfJ extends BasicGame {
 
 	}
 
-	// add eventqueue shit
+	// add event queue shit
 	@Override
 	public void update(GameContainer container, int delta)
 			throws SlickException {

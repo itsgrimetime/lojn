@@ -1,12 +1,18 @@
 package base;
 
 
+import org.newdawn.slick.*;
+import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
+
+import java.awt.*;
+import java.awt.Font;
 
 public class Player extends GameObject {
 
 	private String name;
+    private TrueTypeFont font = new TrueTypeFont(new Font("Verdana", Font.PLAIN, 11), false);
 
 	public Player(int x, int y, Image image, boolean alive, Map map, String name) {
 		super(x, y, image, alive, map);
@@ -118,6 +124,7 @@ public class Player extends GameObject {
 		} else {
 			g.drawImage(image, renderX * 32, renderY * 32);
 		}
+        this.rayCast(g, renderX, renderY);
 	}
 
 	public void updateExploredTiles() {
@@ -128,14 +135,78 @@ public class Player extends GameObject {
 						|| this.y + j >= this.getMap().getHeight()) {
 					continue;
 				} else {
-					if (i * i + j * j <= this.getVisRange()
+					/*
+                    if (i * i + j * j <= this.getVisRange()
 							* this.getVisRange()) {
 						this.getMap().getTileArray().get(this.x + i)
 								.get(this.y + j).setExplored(true);
 					}
+					*/
 				}
 			}
 		}
-	}
+
+    }
+
+    public void rayCast(Graphics g, int playerX, int playerY) {
+
+        int resolution = 8;
+        int lineRes = 4;
+
+        double sliceDegrees = (2 * Math.PI) / resolution;
+
+        int rayCenterX = (playerX * 32) + 16; // center of player on screen
+        int rayCenterY = (playerY * 32) + 16; // ^^^
+        int rayLength = this.getVisRange() * 32; // length of entire ray
+
+        int raySectionLen = rayLength / lineRes; // break it up into lineRes segments
+
+        // for each slice of the "pie"
+        for (int slice = 0; slice < resolution; slice++) {
+            g.setColor(Color.red);
+
+            // Distance from player drawing
+            double xComponent = ((rayCenterX + (rayLength * Math.cos((slice * sliceDegrees)))));
+            double yComponent = ((rayCenterY + (rayLength * Math.sin((slice * sliceDegrees)))));
+
+            g.drawLine(rayCenterX, rayCenterY, (float) xComponent, (float) yComponent);
+
+            // for each segment in the line
+            for (int lineSection = 1; lineSection <= lineRes; lineSection++) {
+                double pointX = rayCenterX + lineSection * (raySectionLen * Math.cos(slice * sliceDegrees));
+                double pointY = rayCenterY + lineSection * (raySectionLen * Math.sin(slice * sliceDegrees));
+
+                int tileX = (int) (this.getX() + (pointX / 32));
+                int tileY = (int) (this.getY() + (pointY / 32));
+
+                System.out.println("slice: " + slice + " lineSection: " + lineSection);
+                System.out.println("+X: " + ((int) pointX / 32) + " +Y: " + ((int) pointY / 32));
+
+                Tile tile = null;
+                if (tileX >= 0 && tileY >= 0 &&
+                        tileX < this.getMap().getWidth() && tileY < this.getMap().getHeight()) {
+                            tile = map.getTileArray().get(tileX).get(tileY);
+                } else {
+                    break;
+                }
+
+                g.setColor(Color.black);
+                g.setFont(this.font); // remember to remove the font in this class from this
+                // g.drawString("X: " + tileX + " Y: " + tileY, (float) pointX, (float) pointY);
+
+                if (tile.isWalkable()) {
+                    tile.setExplored(true);
+                    g.setColor(Color.yellow);
+                    g.fillOval((float) pointX, (float) pointY, 3.0f, 3.0f);
+                } else {
+                    g.setColor(Color.red);
+                    g.fillOval((float) pointX, (float) pointY, 3.0f, 3.0f);
+                    break;
+                }
+
+            }
+            
+        }
+    }
 
 }

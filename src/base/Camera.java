@@ -10,7 +10,6 @@ public class Camera {
 	private int width; // width of game window in 32x32 tiles
 	private int height; // height of game window in 32x32 tiles
 
-	//
 	public Camera(Map map, Player player, int width, int height) {
 		this.map = map;
 		this.player = player;

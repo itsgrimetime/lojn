@@ -88,4 +88,5 @@ public class Tile extends Atom {
 		return ((Math.pow((tile.x - go.x), 2) + Math.pow((tile.y - go.y), 2) <= Math
 				.pow(go.getVisRange(), 2)));
 	}
+
 }

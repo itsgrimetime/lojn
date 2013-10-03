@@ -64,36 +64,43 @@ public class Map {
 			char[] mapRow = fileScanner.nextLine().toCharArray();
 			for (int x = 0; x < this.width; x++) {
 				Tile tile = new Tile(x, y, null, false);
-				if (mapRow[x] == '.') {
-					if (rand.nextDouble() <= .15) {
-						tile.setImage(floorImages[rand
-								.nextInt(floorImages.length - 1) + 1]);
-					} else {
-						tile.setImage(floorImages[0]);
-					}
-					tile.setWalkable(true);
-				} else if (mapRow[x] == '#') {
-					if (rand.nextDouble() <= .05) {
-						tile.setImage(wallImages[rand
-								.nextInt(wallImages.length - 1) + 1]);
-					} else {
-						tile.setImage(wallImages[0]);
-					}
-					tile.setWalkable(false);
-				} else if (mapRow[x] == '~') {
-					tile.setWalkable(true);
-					tile.setWater(true);
-					// tile.setDepth(Tile.type.DEEP);
-					tile.setImage(deepWaterImage);
-				} else if (mapRow[x] == 'w') {
-					tile.setWalkable(true);
-					tile.setWater(true);
-					tile.setImage(shallowWaterImage);
-				} else if (mapRow[x] == 'm') {
-					tile.setWalkable(true);
-					tile.setImage(floorImages[rand
-							.nextInt(wallImages.length - 2) + 1]);
-				}
+
+                switch (mapRow[x]) {
+                    case '.':
+                        if (rand.nextDouble() <= .15) {
+                            tile.setImage(floorImages[rand
+                                    .nextInt(floorImages.length - 1) + 1]);
+                        } else {
+                            tile.setImage(floorImages[0]);
+                        }
+                        tile.setWalkable(true);
+                        break;
+                    case '#':
+                        if (rand.nextDouble() <= .05) {
+                            tile.setImage(wallImages[rand
+                                    .nextInt(wallImages.length - 1) + 1]);
+                        } else {
+                            tile.setImage(wallImages[0]);
+                        }
+                        tile.setWalkable(false);
+                        break;
+                    case '~':
+                        tile.setWalkable(true);
+                        tile.setWater(true);
+                        // tile.setDepth(Tile.type.DEEP);
+                        tile.setImage(deepWaterImage);
+                        break;
+                    case 'w':
+                        tile.setWalkable(true);
+                        tile.setWater(true);
+                        tile.setImage(shallowWaterImage);
+                        break;
+                    case 'm':
+                        tile.setWalkable(true);
+                        tile.setImage(floorImages[rand
+                                .nextInt(wallImages.length - 2) + 1]);
+                        break;
+                }
 				map.get(x).add(y, tile);
 			}
 		}
